@@ -8,24 +8,25 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Raleway', 'sans-serif'],
+      },
       colors: {
         'hu': {
-          red: '#f92706',
-          'blue-dark': '#202b59',
-          'blue-light': '#05b0fe',
-          pink: '#e90d88',
-          green: '#16af81',
-          orange: '#fe8210',
-          purple: '#7c04d5',
-          black: '#303030',
-          'gray-light': '#f8f9fa',
-        },
-      },
-      fontFamily: {
-        sans: ['Raleway', 'Helvetica Neue', 'Arial', 'sans-serif'],
+          red: '#f92706',           // Company red
+          'blue-dark': '#202b59',   // Corporate blue
+          'blue-light': '#05b0fe',  // Team blue
+          pink: '#e90d88',          // Social pink
+          green: '#16af81',         // Social green
+          orange: '#fe8210',        // Social orange
+          purple: '#7c04d5',        // Social purple
+          black: '#303030',         // Text color (off-black)
+          'gray-light': '#f0f0f0',  // Light gray for backgrounds
+        }
       },
     },
   },
   plugins: [],
 }
+
 export default config
