@@ -6,7 +6,7 @@ import { Instagram, Check } from 'lucide-react';
 const SurveyCompletion = () => {
   const [showCheckmark, setShowCheckmark] = useState(false);
   const [showContent, setShowContent] = useState(false);
-  const router = useRouter()
+  
 
   useEffect(() => {
     // Trigger checkmark animation
