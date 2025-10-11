@@ -70,10 +70,10 @@ const SurveyCompletion = () => {
           {/* Impact Message */}
           <div className="mb-10">
             <p className="text-lg text-gray-700 mb-4">
-               your voice matters and helps us understand the impact of humanutopia&apos;s programmes.
+              we&apos;ll use this data to show schools how our work creates positive change.
             </p>
             <p className="text-base text-gray-600">
-            we&apos;ll use this data to show schools how our work creates positive change.
+              we&apos;ll use this data to show schools how our work creates positive change.
             </p>
           </div>
 
