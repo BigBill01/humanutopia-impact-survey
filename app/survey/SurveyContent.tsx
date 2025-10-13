@@ -77,6 +77,8 @@ export default function SurveyContent() {
   const [fadeIn, setFadeIn] = useState(true)
   const [mounted, setMounted] = useState(false)
   const [saving, setSaving] = useState(false)
+// Generate unique student ID for this survey session
+const [studentId] = useState(() => crypto.randomUUID());
 
   // Load session data
   useEffect(() => {
