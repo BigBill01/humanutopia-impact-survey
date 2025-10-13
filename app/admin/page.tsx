@@ -5,38 +5,38 @@ import { TrendingUp, Users, Building2, Calendar, Award, ArrowUpRight, Download, 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { createClient } from '@supabase/supabase-js'
 
-// Add these type definitions
+// Type definitions
 interface PillarData {
-    name: string;
-    before: number;
-    after: number;
-    improvement: number;
-    color: string;
-  }
-  
-  interface SessionData {
-    id: string;
-    school_name: string;
-    facilitator_name: string;
-    year_group: string;
-    session_date: string;
-  }
-  
-  interface DashboardStats {
-    totalStudents: number;
-    schoolsReached: number;
-    matsRepresented: number;
-    avgImprovement: number;
-    pillarData: PillarData[];
-    sessions: SessionData[];
-  }
-  
-  interface Response {
-    session_id: string;
-    pillar: string;
-    is_before: boolean;
-    score: number;
-  }
+  name: string;
+  before: number;
+  after: number;
+  improvement: number;
+  color: string;
+}
+
+interface SessionData {
+  id: string;
+  school_name: string;
+  facilitator_name: string;
+  year_group: string;
+  session_date: string;
+}
+
+interface DashboardStats {
+  totalStudents: number;
+  schoolsReached: number;
+  matsRepresented: number;
+  avgImprovement: number;
+  pillarData: PillarData[];
+  sessions: SessionData[];
+}
+
+interface Response {
+  session_id: string;
+  pillar: string;
+  is_before: boolean;
+  score: number;
+}
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
   
   const supabase = createClient(
     'https://qjiscnwrapoyksikrexv.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqaXNjbndyYXBveWtzaWtyZXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMzk2NzgsImV4cCI6MjA3NTcxNTY3OH0.4KlZF0KOKtzpVc3WRWqMSkvLbLlPRLXyQ5-vu41TFIE' // You'll need to add this from Supabase dashboard
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
   )
 
   // Fetch real data from Supabase when authenticated
@@ -78,8 +78,8 @@ export default function AdminDashboard() {
       if (sessionsError) throw sessionsError;
 
       // Calculate stats
-      const uniqueStudents = new Set(responses?.map((r: any) => r.session_id) || []).size;
-      const uniqueSchools = new Set(sessions?.map((s: any) => s.school_name) || []).size;
+      const uniqueStudents = new Set(responses?.map((r: Response) => r.session_id) || []).size;
+      const uniqueSchools = new Set(sessions?.map((s: SessionData) => s.school_name) || []).size;
 
       // Calculate pillar improvements
       const pillarData = calculatePillarImprovements(responses || []);
@@ -149,14 +149,6 @@ export default function AdminDashboard() {
     return Number((total / pillarData.length).toFixed(1));
   };
 
-  const pillarColors: Record<string, string> = {
-    hope: '#e90d88',
-    confidence: '#05b0fe',
-    happiness: '#fe8210',
-    relationships: '#16af81',
-    employability: '#7c04d5'
-  };
-
   const handleLogin = () => {
     if (password === 'humanutopia2025') {
       setIsAuthenticated(true);
@@ -171,8 +163,8 @@ export default function AdminDashboard() {
     }
   };
 
-  // Use real data if available, otherwise show loading or empty state
-  const displayData = realData || {
+  // Use real data if available, otherwise show empty state
+  const displayData: DashboardStats = realData || {
     totalStudents: 0,
     schoolsReached: 0,
     matsRepresented: 0,
@@ -186,7 +178,7 @@ export default function AdminDashboard() {
   const matData = [
     {
       name: 'OASIS COMMUNITY LEARNING',
-      schools: displayData.sessions.map((s: any) => s.school_name),
+      schools: displayData.sessions.map((s: SessionData) => s.school_name),
       totalStudents: displayData.totalStudents,
       sessions: displayData.sessions.length,
       avgImprovement: displayData.avgImprovement
@@ -355,7 +347,7 @@ export default function AdminDashboard() {
               <h2 className="text-xl font-bold mb-6" style={{ color: '#303030' }}>5 Pillar Impact Overview</h2>
               {pillarDataForChart.length > 0 ? (
                 <div className="space-y-4">
-                  {pillarDataForChart.map((pillar: any) => (
+                  {pillarDataForChart.map((pillar: PillarData) => (
                     <div key={pillar.name}>
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-semibold text-slate-700">{pillar.name}</span>
@@ -444,7 +436,7 @@ export default function AdminDashboard() {
 
                   {/* Individual Pillar Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {pillarDataForChart.map((pillar: any) => (
+                    {pillarDataForChart.map((pillar: PillarData) => (
                       <div key={pillar.name} className="bg-slate-50 rounded-xl p-6 border-2" style={{ borderColor: `${pillar.color}33` }}>
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="font-bold" style={{ color: '#303030' }}>{pillar.name}</h3>
