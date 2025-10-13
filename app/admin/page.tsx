@@ -5,13 +5,46 @@ import { TrendingUp, Users, Building2, Calendar, Award, ArrowUpRight, Download, 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { createClient } from '@supabase/supabase-js'
 
+// Add these type definitions
+interface PillarData {
+    name: string;
+    before: number;
+    after: number;
+    improvement: number;
+    color: string;
+  }
+  
+  interface SessionData {
+    id: string;
+    school_name: string;
+    facilitator_name: string;
+    year_group: string;
+    session_date: string;
+  }
+  
+  interface DashboardStats {
+    totalStudents: number;
+    schoolsReached: number;
+    matsRepresented: number;
+    avgImprovement: number;
+    pillarData: PillarData[];
+    sessions: SessionData[];
+  }
+  
+  interface Response {
+    session_id: string;
+    pillar: string;
+    is_before: boolean;
+    score: number;
+  }
+
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [view, setView] = useState('overview');
   const [loading, setLoading] = useState(true);
-  const [realData, setRealData] = useState<any>(null);
+  const [realData, setRealData] = useState<DashboardStats | null>(null);
   
   const supabase = createClient(
     'https://qjiscnwrapoyksikrexv.supabase.co',
@@ -23,6 +56,7 @@ export default function AdminDashboard() {
     if (isAuthenticated) {
       fetchRealData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const fetchRealData = async () => {
@@ -67,7 +101,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const calculatePillarImprovements = (responses: any[]) => {
+  const calculatePillarImprovements = (responses: Response[]): PillarData[] => {
     const pillars = [
       { name: 'Hope', key: 'hope', color: '#e90d88' },
       { name: 'Confidence', key: 'confidence', color: '#05b0fe' },
@@ -109,7 +143,7 @@ export default function AdminDashboard() {
     });
   };
 
-  const calculateOverallAverage = (pillarData: any[]) => {
+  const calculateOverallAverage = (pillarData: PillarData[]): number => {
     if (pillarData.length === 0) return 0;
     const total = pillarData.reduce((sum, p) => sum + p.improvement, 0);
     return Number((total / pillarData.length).toFixed(1));
