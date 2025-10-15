@@ -67,7 +67,7 @@ const pillars: Pillar[] = [
 export default function SurveyContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const sessionId = searchParams.get('s')
+  const sessionId = searchParams.get('s') || searchParams.get('session')
 
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
